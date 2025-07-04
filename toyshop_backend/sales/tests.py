@@ -4,6 +4,8 @@ from django.urls import reverse
 from rest_framework import status
 from django.contrib.auth.models import User
 from customers.models import Customer
+from datetime import date
+from decimal import Decimal
 
 
 class SalesTests(APITestCase):
@@ -37,7 +39,10 @@ class SalesTests(APITestCase):
         # daily-stats
         r: Response = self.client.get("/api/sales/daily-stats/")
         self.assertEqual(r.status_code, status.HTTP_200_OK)
-        self.assertIn({"data": "2024-01-01", "total": "100.00"}, r.data)
+
+        data = list(r.data)
+        expected = {"data": date(2024, 1, 1), "total": Decimal("100.00")}
+        self.assertIn(expected, data)
 
         # leaderboards
         r = self.client.get("/api/sales/leaderboards/")

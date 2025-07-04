@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 from rest_framework import viewsets, decorators, response
 from django.db.models import Sum, Avg, Count
 from .models import Sale

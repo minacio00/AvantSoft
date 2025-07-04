@@ -26,7 +26,6 @@ from drf_yasg import openapi
 from rest_framework import permissions
 
 
-# Swagger/OpenAPI setup
 schema_view = get_schema_view(
     openapi.Info(
         title="Toyshop API",
