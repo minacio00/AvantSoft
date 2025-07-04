@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: toyShop
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgresql
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      context: ./toyshop_backend
+    environment:
+      DB_ENGINE: django.db.backends.postgresql
+      DB_NAME: toyShop
+      DB_USER: postgres
+      DB_PASSWORD: postgresql
+      DB_HOST: db
+      DB_PORT: 5432
+      DEBUG: "True"
+      ALLOWED_HOSTS: "*"
+    volumes:
+      - ./toyshop_backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./shop
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - ./shop/.env.docker
+    volumes:
+      - ./shop:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
